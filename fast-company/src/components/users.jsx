@@ -1,8 +1,14 @@
-import React from "react";
+import React, {  useState } from "react";
 import api from "../api"
 const Users = () => {
- const usersData = api.users.fetchAll();
-  console.log(usersData[0]);
+  const usersDataSource = api.users.fetchAll();
+  console.log(usersDataSource[0]);
+  const [usersData, setUserData] = useState (usersDataSource);
+
+  function handleDelite(id) {
+    setUserData((prevState)=>prevState.filter(user=>user._id !== id))
+  }
+
   return (
   <div className="container">
   <table className="table">
@@ -27,7 +33,9 @@ const Users = () => {
         <td>{user.profession.name}</td>    
         <td>{user.completedMeetings}</td>    
         <td>{user.rate}/5</td>    
-        <td><button type="button" className="btn btn-danger bg-red">delite</button></td>
+        <td><button type="button" 
+              className="btn btn-danger bg-red"
+              onClick = {()=> handleDelite(user._id)}>delite</button></td>
       </tr>)
       
      })} 
