@@ -3,7 +3,7 @@ import api from "../api";
 const Users = () => {
   function renderPhrase(n) {
     if (n < 2 || (n >= 5 && n <= 21)) {
-      return "человек";
+      return "человек тусанет";
     }
     if (n > 1 && n < 5) {
       return "человека тусанут";
@@ -18,20 +18,19 @@ const Users = () => {
 
   const usersDataSource = api.users.fetchAll();
   const [usersData, setUserData] = useState(usersDataSource);
-  
+
   function handleDelite(id) {
     setUserData((prevState) => prevState.filter((user) => user._id !== id));
-    
-    
   }
 
   return (
-    <div className="container">
+    <div div className="container">
       {usersData.length !== 0 ? (
-        <div className="container">
+        <div>
           <h3>
             <span className="mt-2 badge bg-primary">
-              {usersData.length} {renderPhrase(usersData.length)} тусанет с тобой сегодня{" "}
+              {usersData.length} {renderPhrase(usersData.length)} с тобой
+              сегодня{" "}
             </span>
           </h3>
           <table className="table">
