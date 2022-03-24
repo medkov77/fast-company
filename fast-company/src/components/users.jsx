@@ -6,33 +6,32 @@ const Users = () => {
       return "человек";
     }
     if (n > 1 && n < 5) {
-      return "человека";
+      return "человека тусанут";
     }
     let nLast = Number(String(n).slice(-1));
     if (nLast > 1 && nLast < 5) {
-      return "человека";
+      return "человека тусанут";
     }
 
-    return "человек";
+    return "человек тусанет";
   }
 
   const usersDataSource = api.users.fetchAll();
   const [usersData, setUserData] = useState(usersDataSource);
-  const [counter, setCounter] = useState(usersData.length);
-  const [phrase, setPhrase] = useState(renderPhrase(counter));
+  
   function handleDelite(id) {
     setUserData((prevState) => prevState.filter((user) => user._id !== id));
-    setCounter(counter - 1);
-    setPhrase(renderPhrase(counter - 1));
+    
+    
   }
 
   return (
     <div className="container">
-      {counter !== 0 ? (
+      {usersData.length !== 0 ? (
         <div className="container">
           <h3>
             <span className="mt-2 badge bg-primary">
-              {counter} {phrase} тусанет с тобой сегодня{" "}
+              {usersData.length} {renderPhrase(usersData.length)} тусанет с тобой сегодня{" "}
             </span>
           </h3>
           <table className="table">
