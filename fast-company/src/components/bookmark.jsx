@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 const BookMark = ({ bookmark, onToggleBookMark, _id }) => {
     return (
         <td onClick={() => onToggleBookMark(_id)}>
-            { bookmark
-                ? <i className="bi bi-arrow-through-heart-fill" />
-                : <i className="bi bi-arrow-through-heart" />
-            }
+            {bookmark
+                ? (<i className="bi bi-arrow-through-heart-fill" />
+                )
+                : (<i className="bi bi-arrow-through-heart" />
+                )}
         </td>
     );
 };

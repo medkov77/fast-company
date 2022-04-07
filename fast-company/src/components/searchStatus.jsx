@@ -17,17 +17,18 @@ function renderPhrase(n) {
 
 const SearchStatus = ({ usersNumber }) => {
     return usersNumber !== 0
-        ? <h3>
+        ? (<h3>
             <span className="mt-2 badge bg-primary">
-                {usersNumber} {renderPhrase(usersNumber)} с тобой
-                сегодня{" "}
+                {usersNumber} {renderPhrase(usersNumber)} с тобой сегодня{" "}
             </span>
         </h3>
-        : <h3>
+        )
+        : (<h3>
             <span className="mt-2 badge bg-danger">
                 никто не тусанет с тобой сегодня
             </span>
-        </h3>;
+        </h3>
+        );
 };
 SearchStatus.propTypes = {
     usersNumber: PropTypes.number.isRequired

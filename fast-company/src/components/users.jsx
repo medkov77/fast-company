@@ -13,7 +13,7 @@ const Users = ({ usersData, ...rest }) => {
     const userCorp = paginate(usersData, currentPage, pageSize);
     return (
         <>
-            <table className="table">
+            {count > 0 && <table className="table">
                 <thead className="mb-2">
                     <tr>
                         <th scope="col">Имя</th>
@@ -39,7 +39,7 @@ const Users = ({ usersData, ...rest }) => {
                         />
                     );
                 })}
-            </table>
+            </table>}
             <Pagination
                 itemsCount={count}
                 pageSize={pageSize}

@@ -3,7 +3,17 @@ import PropTypes from "prop-types";
 import BookMark from "./bookmark";
 import Qualiti from "./qualite";
 
-const User = ({ name, qualities, profession, completedMeetings, rate, onToggleBookMark, _id, bookmark, onDelite }) => {
+const User = ({
+    name,
+    qualities,
+    profession,
+    completedMeetings,
+    rate,
+    onToggleBookMark,
+    _id,
+    bookmark,
+    onDelite
+}) => {
     return (
         <tbody className="mt-2 pt-2">
             <tr className="align-middle">
