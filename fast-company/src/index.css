@@ -11,16 +11,3 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
 }
-
-.bi-arrow-through-heart-fill::before {
-    transition: all 0.3s ease-in-out;
-    color: red;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.bi-arrow-through-heart::before {
-    transition: all 0.3s ease-in-out;
-    font-size: 20px;
-    cursor: pointer;
-}
