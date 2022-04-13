@@ -24,7 +24,7 @@ const Users = ({ users: allUsers, ...rest }) => {
     };
     console.log(selectedProf, "prof");
     const filtredUsers = selectedProf
-        ? allUsers.filter((user) => user.profession === selectedProf)
+        ? allUsers.filter((user) => user.profession._id === selectedProf._id)
         : allUsers;
     console.log(filtredUsers);
     const usersCrop = paginate(filtredUsers, currentPage, pageSize);
@@ -43,7 +43,7 @@ const Users = ({ users: allUsers, ...rest }) => {
                         <tr>
                             <th scope="col">Имя</th>
                             <th scope="col">Качества</th>
-                            <th scope="col">Провфессия</th>
+                            <th scope="col">Проффессия</th>
                             <th scope="col">Встретился, раз</th>
                             <th scope="col">Оценка</th>
                             <th scope="col">Избранное</th>
