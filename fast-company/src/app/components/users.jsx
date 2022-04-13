@@ -8,24 +8,31 @@ import api from "../api";
 const Users = ({ users: allUsers, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProffesions] = useState();
+    const [selectedProf, setSelectsdProf] = useState();
     const count = allUsers.length;
     const pageSize = 4;
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProffesions(data));
     });
 
-    const ProfessionSelect = (params) => {
-        console.log(params);
+    const ProfessionSelect = (item) => {
+        setSelectsdProf(item);
     };
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
         console.log("page: ", pageIndex);
     };
-    const usersCrop = paginate(allUsers, currentPage, pageSize);
+    console.log(selectedProf, "prof");
+    const filtredUsers = selectedProf
+        ? allUsers.filter((user) => user.profession === selectedProf)
+        : allUsers;
+    console.log(filtredUsers);
+    const usersCrop = paginate(filtredUsers, currentPage, pageSize);
     return (
         <>
             {professions && (
                 <GroupList
+                    selectedItem={selectedProf}
                     items={professions}
                     onItemSelect={ProfessionSelect}
                 />
