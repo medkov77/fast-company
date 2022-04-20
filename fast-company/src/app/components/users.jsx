@@ -12,7 +12,7 @@ const Users = ({ users: allUsers, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfessions] = useState();
     const [selectedProf, setSelectedProf] = useState();
-    const [sortBy, setSortBy] = useState({ iter: "name", order: "asc" });
+    const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 8;
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data));
@@ -33,7 +33,7 @@ const Users = ({ users: allUsers, ...rest }) => {
         ? allUsers.filter((user) => user.profession._id === selectedProf._id)
         : allUsers;
     const count = filtredUsers.length;
-    const sortUsers = _.orderBy(filtredUsers, [sortBy.iter], [sortBy.order]);
+    const sortUsers = _.orderBy(filtredUsers, [sortBy.path], [sortBy.order]);
     const usersCrop = paginate(sortUsers, currentPage, pageSize);
     const clearItem = () => {
         setSelectedProf();
@@ -67,7 +67,7 @@ const Users = ({ users: allUsers, ...rest }) => {
                         users={usersCrop}
                         {...rest}
                         onSort={handleSort}
-                        curentSort={sortBy}
+                        selectedSort={sortBy}
                     />
                 )}
                 <div>

@@ -25,7 +25,7 @@ const App = () => {
 
     return (
         <div className="container">
-            <SearchStatus usersNumber={usersData.length} />
+            
             <Users
                 usersData={usersData}
                 onDelite={handleDelite}
