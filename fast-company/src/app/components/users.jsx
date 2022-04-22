@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
 import UsersTable from "./usersTable";
@@ -8,12 +8,29 @@ import GroupList from "./groupList";
 import api from "../api";
 import _ from "lodash";
 // import { findLastIndex } from "lodash";
-const Users = ({ users: allUsers, ...rest }) => {
+const Users = () => {
+    const [users, setUsers] = useState();
+    useEffect(() => api.users.fetchAll().then((data) => setUsers(data)), []);
+    const handleDelete = (userId) => {
+        setUsers(users.filter((user) => user._id !== userId));
+    };
+
+    const handleToggleBookMark = (id) => {
+        setUsers(
+            users.map((user) => {
+                if (user._id === id) {
+                    return { ...user, bookmark: !user.bookmark };
+                }
+                return user;
+            })
+        );
+        console.log(id);
+    };
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfessions] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
-    const pageSize = 8;
+    const pageSize = 4;
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data));
     }, []);
@@ -29,23 +46,22 @@ const Users = ({ users: allUsers, ...rest }) => {
     const handleSort = (item) => {
         setSortBy(item);
     };
-    const filtredUsers = selectedProf
-        ? allUsers.filter((user) => user.profession._id === selectedProf._id)
-        : allUsers;
-    const count = filtredUsers.length;
-    const sortUsers = _.orderBy(filtredUsers, [sortBy.path], [sortBy.order]);
-    const usersCrop = paginate(sortUsers, currentPage, pageSize);
-    const clearItem = () => {
-        setSelectedProf();
-    };
-    return (
-        <div className="container d-flex mt-2">
-            {!professions && (
-                <div className="mt-5 m-auto badge bg-secondary fz-32 fs-1 ">
-                    Идет загрузка
-                </div>
-            )}
-            {professions && (
+    if (users && professions) {
+        const filtredUsers = selectedProf
+            ? users.filter((user) => user.profession._id === selectedProf._id)
+            : users;
+        const count = filtredUsers.length;
+        const sortUsers = _.orderBy(
+            filtredUsers,
+            [sortBy.path],
+            [sortBy.order]
+        );
+        const usersCrop = paginate(sortUsers, currentPage, pageSize);
+        const clearItem = () => {
+            setSelectedProf();
+        };
+        return (
+            <div className="container d-flex mt-2">
                 <div className="d-flex flex-column flex-shrink-0 p-3">
                     <GroupList
                         selectedItem={selectedProf}
@@ -59,33 +75,39 @@ const Users = ({ users: allUsers, ...rest }) => {
                         Очистить
                     </button>
                 </div>
-            )}
-            <div className="d-flex flex-column ">
-                {professions && <SearchStatus length={count} />}
-                {count > 0 && (
-                    <UsersTable
-                        users={usersCrop}
-                        {...rest}
-                        onSort={handleSort}
-                        selectedSort={sortBy}
-                    />
-                )}
-                <div>
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={count}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageChange={handlePageChange}
+
+                <div className="d-flex flex-column ">
+                    {professions && <SearchStatus length={count} />}
+                    {count > 0 && (
+                        <UsersTable
+                            users={usersCrop}
+                            onToggleBookMark={handleToggleBookMark}
+                            onDelete={handleDelete}
+                            onSort={handleSort}
+                            selectedSort={sortBy}
                         />
+                    )}
+                    <div>
+                        <div className="d-flex justify-content-center">
+                            <Pagination
+                                itemsCount={count}
+                                pageSize={pageSize}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
+        );
+    }
+    return (
+        <div className="d-flex justify-content-center">
+            <div className=" mt-5 m-auto badge bg-secondary fz-32 fs-1 ">
+                Идет загрузка
+            </div>
         </div>
     );
-};
-Users.propTypes = {
-    users: PropTypes.array
 };
 
 export default Users;
