@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
 import UsersTable from "./usersTable";
@@ -6,12 +7,14 @@ import SearchStatus from "./searchStatus";
 import GroupList from "./groupList";
 import api from "../api";
 import _ from "lodash";
+// import { findLastIndex } from "lodash";
 const Users = () => {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState();
+    useEffect(() => api.users.fetchAll().then((data) => setUsers(data)), []);
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
-    useEffect(() => api.users.fetchAll().then((data) => setUsers(data)), []);
+
     const handleToggleBookMark = (id) => {
         setUsers(
             users.map((user) => {
@@ -24,10 +27,10 @@ const Users = () => {
         console.log(id);
     };
     const [currentPage, setCurrentPage] = useState(1);
-    const [professions, setProfessions] = useState();
+    const [professions, setProfessions] = useState([]);
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
-    const pageSize = 8;
+    const pageSize = 4;
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfessions(data));
     }, []);
@@ -43,58 +46,68 @@ const Users = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
-
-    const filtredUsers = selectedProf
-        ? users.filter((user) => user.profession._id === selectedProf._id)
-        : users;
-    const count = filtredUsers.length;
-    const sortUsers = _.orderBy(filtredUsers, [sortBy.path], [sortBy.order]);
-    const usersCrop = paginate(sortUsers, currentPage, pageSize);
-    const clearItem = () => {
-        setSelectedProf();
-    };
-    return (
-        <div className="container d-flex mt-2">
-            <div className="d-flex flex-column flex-shrink-0 p-3">
-                <GroupList
-                    selectedItem={selectedProf}
-                    items={professions}
-                    onItemSelect={ProfessionSelect}
-                />
-                <button className="btn btn-secondary mt-2" onClick={clearItem}>
-                    Очистить
-                </button>
-            </div>
-            <div className="d-flex flex-column ">
-                {professions && <SearchStatus length={count} />}
-                {count > 0 && (
-                    <UsersTable
-                        users={usersCrop}
-                        onDelete={handleDelete}
-                        onToggleBookMark={handleToggleBookMark}
-                        onSort={handleSort}
-                        selectedSort={sortBy}
+    if (users) {
+        const filtredUsers = selectedProf
+            ? users.filter((user) => user.profession._id === selectedProf._id)
+            : users;
+        const count = filtredUsers.length;
+        const sortUsers = _.orderBy(
+            filtredUsers,
+            [sortBy.path],
+            [sortBy.order]
+        );
+        const usersCrop = paginate(sortUsers, currentPage, pageSize);
+        const clearItem = () => {
+            setSelectedProf();
+        };
+        return (
+            <div className="container d-flex mt-2">
+                <div className="d-flex flex-column flex-shrink-0 p-3">
+                    <GroupList
+                        selectedItem={selectedProf}
+                        items={professions}
+                        onItemSelect={ProfessionSelect}
                     />
-                )}
-                <div>
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={count}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageChange={handlePageChange}
+                    <button
+                        className="btn btn-secondary mt-2"
+                        onClick={clearItem}
+                    >
+                        Очистить
+                    </button>
+                </div>
+
+                <div className="d-flex flex-column ">
+                    {professions && <SearchStatus length={count} />}
+                    {count > 0 && (
+                        <UsersTable
+                            users={usersCrop}
+                            onToggleBookMark={handleToggleBookMark}
+                            onDelete={handleDelete}
+                            onSort={handleSort}
+                            selectedSort={sortBy}
                         />
+                    )}
+                    <div>
+                        <div className="d-flex justify-content-center">
+                            <Pagination
+                                itemsCount={count}
+                                pageSize={pageSize}
+                                currentPage={currentPage}
+                                onPageChange={handlePageChange}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
+        );
+    }
+    return (
+        <div className="d-flex justify-content-center">
+            <div className=" mt-5 m-auto badge bg-secondary fz-32 fs-1 ">
+                Идет загрузка
+            </div>
         </div>
     );
-
-    // return (
-    //     <div className="mt-5 m-auto badge bg-secondary fz-32 fs-1 ">
-    //         Идет загрузка
-    //     </div>
-    // );
 };
 
 export default Users;
