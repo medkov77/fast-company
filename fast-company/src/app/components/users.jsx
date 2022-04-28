@@ -45,6 +45,7 @@ const Users = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
+
     if (users) {
         const filtredUsers = selectedProf
             ? users.filter((user) => user.profession._id === selectedProf._id)
