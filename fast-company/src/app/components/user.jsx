@@ -1,56 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Quality from "./quality";
-import BookMark from "./bookmark";
-const User = ({
-    _id,
-    name,
-    qualities,
-    profession,
-    completedMeetings,
-    rate,
-    onDelete,
-    bookmark,
-    onToggleBookMark
-}) => {
+import { useHistory } from "react-router-dom";
+const User = ({ user }) => {
+    const history = useHistory();
+    const handleAllUsers = () => {
+        history.push("/users");
+    };
     return (
-        <tr key={_id}>
-            <td>{name}</td>
-            <td>
-                {qualities.map((qual) => (
+        <div key={user._id} className="p-5">
+            <h1>{user.name}</h1>
+            <h2>Профессия: {user.profession.name}</h2>
+            <div>
+                {user.qualities.map((qual) => (
                     <Quality key={qual._id} {...qual} />
                 ))}
-            </td>
-            <td>{profession.name}</td>
-            <td>{completedMeetings}</td>
-            <td>{rate} /5</td>
+            </div>
+            <td>Встретился, раз {user.completedMeetings}</td>
+            <h2>Rate: {user.rate} /5</h2>
             <td>
-                <BookMark
-                    status={bookmark}
-                    onClick={() => onToggleBookMark(_id)}
-                />
-            </td>
-            <td>
-                <button
-                    onClick={() => onDelete(_id)}
-                    className="btn btn-danger"
-                >
-                    delete
+                <button className="btn btn-success" onClick={handleAllUsers}>
+                    Все пользователи
                 </button>
             </td>
-        </tr>
+        </div>
     );
 };
 User.propTypes = {
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    qualities: PropTypes.array,
-    profession: PropTypes.object.isRequired,
-    completedMeetings: PropTypes.number.isRequired,
-    rate: PropTypes.number.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    bookmark: PropTypes.bool,
-    onToggleBookMark: PropTypes.func.isRequired
+    user: PropTypes.object.isRequired
 };
 
 export default User;

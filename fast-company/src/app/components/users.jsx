@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
 import UsersTable from "./usersTable";
