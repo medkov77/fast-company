@@ -27,7 +27,7 @@ const Users = () => {
         console.log(id);
     };
     const [currentPage, setCurrentPage] = useState(1);
-    const [professions, setProfessions] = useState();
+    const [professions, setProfessions] = useState([]);
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 4;
@@ -46,7 +46,8 @@ const Users = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
-    if (users && professions) {
+
+    if (users) {
         const filtredUsers = selectedProf
             ? users.filter((user) => user.profession._id === selectedProf._id)
             : users;
