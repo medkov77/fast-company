@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Users from "./users";
+import Users from "./layout/users";
 import api from "../api";
 import User from "./user";
-
 const UsersList = () => {
     const params = useParams();
     const { userId } = params;

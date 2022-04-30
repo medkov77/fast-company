@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-import UsersTable from "./usersTable";
-import SearchStatus from "./searchStatus";
-import GroupList from "./groupList";
-import api from "../api";
+import { paginate } from "../../utils/paginate";
+import Pagination from "../pagination";
+import UsersTable from "../usersTable";
+import SearchStatus from "../searchStatus";
+import GroupList from "../groupList";
+import api from "../../api";
 import _ from "lodash";
 // import { findLastIndex } from "lodash";
 const Users = () => {
