@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route } from "react-router-dom";
 // import Users from "./components/users";
-import Main from "./components/layout/main";
-import Login from "./components/layout/login";
+import Main from "./layouts/main";
+import Login from "./layouts/login";
 import NavBar from "./components/navbar";
 import UsersList from "./components/usersList";
 
