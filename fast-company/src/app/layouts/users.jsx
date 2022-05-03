@@ -22,11 +22,11 @@ const Users = () => {
                 return user;
             })
         );
-        console.log(id);
     };
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfessions] = useState([]);
     const [selectedProf, setSelectedProf] = useState();
+    const [search, setSearch] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 4;
     useEffect(() => {
@@ -37,6 +37,7 @@ const Users = () => {
     }, [selectedProf]);
     const ProfessionSelect = (item) => {
         setSelectedProf(item);
+        setSearch();
     };
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
@@ -44,11 +45,21 @@ const Users = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
+    const handleSearch = ({ target }) => {
+        setSearch(target.value);
+        setSelectedProf();
+    };
 
     if (users) {
-        const filtredUsers = selectedProf
+        let filtredUsers = selectedProf
             ? users.filter((user) => user.profession._id === selectedProf._id)
             : users;
+        if (search) {
+            filtredUsers = users.filter(
+                (user) =>
+                    user.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
+            );
+        }
         const count = filtredUsers.length;
         const sortUsers = _.orderBy(
             filtredUsers,
@@ -58,6 +69,7 @@ const Users = () => {
         const usersCrop = paginate(sortUsers, currentPage, pageSize);
         const clearItem = () => {
             setSelectedProf();
+            setSearch();
         };
         return (
             <div className="container d-flex mt-2">
@@ -76,7 +88,18 @@ const Users = () => {
                 </div>
 
                 <div className="d-flex flex-column ">
-                    {professions && <SearchStatus length={count} />}
+                    {users && <SearchStatus length={count} />}
+                    {users && (
+                        <input
+                            type="text"
+                            id="search"
+                            name="search"
+                            placeholder="Search..."
+                            className="fs-4"
+                            onChange={handleSearch}
+                        />
+                    )}
+
                     {count > 0 && (
                         <UsersTable
                             users={usersCrop}
