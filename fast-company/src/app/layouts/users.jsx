@@ -37,7 +37,7 @@ const Users = () => {
     }, [selectedProf]);
     const ProfessionSelect = (item) => {
         setSelectedProf(item);
-        setSearch();
+        setSearch("");
     };
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
@@ -69,7 +69,7 @@ const Users = () => {
         const usersCrop = paginate(sortUsers, currentPage, pageSize);
         const clearItem = () => {
             setSelectedProf();
-            setSearch();
+            setSearch("");
         };
         return (
             <div className="container d-flex mt-2">
@@ -94,6 +94,7 @@ const Users = () => {
                             type="text"
                             id="search"
                             name="search"
+                            value={search}
                             placeholder="Search..."
                             className="fs-4"
                             onChange={handleSearch}
