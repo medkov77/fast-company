@@ -13,6 +13,11 @@ const Users = () => {
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
+    const [serchData, setSerchData] = useState("");
+    const handleSearch = ({ target }) => {
+        setSerchData(target.value);
+        console.log(serchData);
+    };
     const handleToggleBookMark = (id) => {
         setUsers(
             users.map((user) => {
@@ -46,8 +51,11 @@ const Users = () => {
     };
 
     if (users) {
-        const filtredUsers = selectedProf
+        let filtredUsers = selectedProf
             ? users.filter((user) => user.profession._id === selectedProf._id)
+            : users;
+        filtredUsers = serchData
+            ? users.filter((user) => user.name === serchData)
             : users;
         const count = filtredUsers.length;
         const sortUsers = _.orderBy(
@@ -78,13 +86,22 @@ const Users = () => {
                 <div className="d-flex flex-column ">
                     {professions && <SearchStatus length={count} />}
                     {count > 0 && (
-                        <UsersTable
-                            users={usersCrop}
-                            onToggleBookMark={handleToggleBookMark}
-                            onDelete={handleDelete}
-                            onSort={handleSort}
-                            selectedSort={sortBy}
-                        />
+                        <>
+                            <input
+                                type="text"
+                                id="search"
+                                name="search"
+                                className="d-block"
+                                onChange={handleSearch}
+                            />
+                            <UsersTable
+                                users={usersCrop}
+                                onToggleBookMark={handleToggleBookMark}
+                                onDelete={handleDelete}
+                                onSort={handleSort}
+                                selectedSort={sortBy}
+                            />
+                        </>
                     )}
                     <div>
                         <div className="d-flex justify-content-center">
