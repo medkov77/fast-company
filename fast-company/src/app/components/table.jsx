@@ -1,8 +1,8 @@
 import React from "react";
-
 import PropTypes from "prop-types";
-import TableHeader from "./tableHeader";
 import TableBody from "./tableBody";
+import TableHeader from "./tableHeader";
+
 const Table = ({ onSort, selectedSort, columns, data, children }) => {
     return (
         <table className="table">
@@ -17,9 +17,9 @@ const Table = ({ onSort, selectedSort, columns, data, children }) => {
 };
 Table.propTypes = {
     onSort: PropTypes.func,
-    selectedSort: PropTypes.object.isRequired,
-    columns: PropTypes.object.isRequired,
-    data: PropTypes.array.isRequired,
+    selectedSort: PropTypes.object,
+    columns: PropTypes.object,
+    data: PropTypes.array,
     children: PropTypes.array
 };
 

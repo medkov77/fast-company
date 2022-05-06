@@ -1,21 +1,21 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route } from "react-router-dom";
-// import Users from "./components/users";
-import Main from "./layouts/main";
+import { Route, Switch, Redirect } from "react-router-dom";
+
+import Users from "./layouts/users";
 import Login from "./layouts/login";
+import Main from "./layouts/main";
 import NavBar from "./components/navbar";
-import UsersList from "./components/usersList";
 
 function App() {
     return (
         <div>
-            <BrowserRouter>
-                <NavBar />
+            <NavBar />
+            <Switch>
+                <Route path="/users/:userId?" component={Users} />
+                <Route path="/login" component={Login} />
                 <Route path="/" exact component={Main} />
-                <Route path="/login" exact component={Login} />
-                <Route path="/users/:userId?" component={UsersList} />
-                <Redirect path="/" />
-            </BrowserRouter>
+                <Redirect to="/" />
+            </Switch>
         </div>
     );
 }
