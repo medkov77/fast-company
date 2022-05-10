@@ -9,14 +9,14 @@ const MultySelectField = ({ options, onChange, name, label, defaultValue }) => {
     const handleChange = (value) => {
         onChange({ name: name, value });
     };
-    console.log("opt", optionsArray[0]);
+    console.log("def", defaultValue);
 
     return (
         <div className="mb-4">
             <label className="form-label">{label}</label>
             <Select
                 isMulti
-                defaultValue={[optionsArray[0], optionsArray[1]]}
+                defaultValue={defaultValue}
                 options={optionsArray}
                 className="basic-multi-select"
                 classNamePrefix="select"
