@@ -5,16 +5,14 @@ import api from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultySelectField from "../common/form/multySelectField";
-import CheckBoxField from "../common/form/checkBoxField";
 import PropTypes from "prop-types";
 const UserEditForm = ({ userId }) => {
-    const [user, setUser] = useState();
-    const [data, setData] = useState({});
+    const [data, setData] = useState();
     useEffect(() => {
         api.users.getById(userId).then((data) => {
-            setUser(data);
             setData({
                 name: data.name,
+                email: data.email,
                 profession: data.profession._id,
                 sex: data.sex,
                 qualities: data.qualities.map((optionName) => ({
@@ -25,9 +23,6 @@ const UserEditForm = ({ userId }) => {
             });
         });
     }, []);
-
-    console.log(user);
-
     const [qualities, setQualities] = useState([]);
     const [professions, setProfession] = useState([]);
     const [errors, setErrors] = useState({});
@@ -59,6 +54,14 @@ const UserEditForm = ({ userId }) => {
         name: {
             isRequired: {
                 message: "Имя обязательно для заполнения"
+            }
+        },
+        email: {
+            isRequired: {
+                message: "Электронная почта обязательна для заполнения"
+            },
+            isEmail: {
+                message: "Email введен некорректно"
             }
         },
         profession: {
@@ -109,13 +112,14 @@ const UserEditForm = ({ userId }) => {
         const isValid = validate();
         if (!isValid) return;
         const { profession, qualities } = data;
-        console.log({
+        const newUserData = {
             ...data,
             profession: getProfessionById(profession),
             qualities: getQualities(qualities)
-        });
+        };
+        api.users.update(userId, newUserData);
     };
-    return user ? (
+    return data ? (
         <div className="row">
             <div className="col-md-6 offset-md-3 shadow p-4">
                 <form onSubmit={handleSubmit}>
@@ -125,6 +129,13 @@ const UserEditForm = ({ userId }) => {
                         value={data.name}
                         onChange={handleChange}
                         error={errors.name}
+                    />
+                    <TextField
+                        label="Электронная почта"
+                        name="email"
+                        value={data.email}
+                        onChange={handleChange}
+                        error={errors.email}
                     />
 
                     <SelectField
@@ -154,20 +165,12 @@ const UserEditForm = ({ userId }) => {
                         onChange={handleChange}
                         name="qualities"
                     />
-                    <CheckBoxField
-                        value={data.licens}
-                        onChange={handleChange}
-                        name="licens"
-                        error={errors.licens}
-                    >
-                        Подтвердить <a>лицензионное солашение</a>
-                    </CheckBoxField>
                     <button
                         className="btn btn-primary w-100 mx-auto"
                         type="submit"
                         disabled={!isValid}
                     >
-                        Submit
+                        Обновить
                     </button>
                 </form>
             </div>

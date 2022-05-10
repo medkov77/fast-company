@@ -55,22 +55,21 @@ const UsersListPage = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
-    // prettier-ignore
     if (users) {
         const filteredUsers = searchQuery
             ? users.filter(
-                (user) =>
-                    user.name
-                        .toLowerCase()
-                        .indexOf(searchQuery.toLowerCase()) !== -1
-            )
+                  (user) =>
+                      user.name
+                          .toLowerCase()
+                          .indexOf(searchQuery.toLowerCase()) !== -1
+              )
             : selectedProf
-                ? users.filter(
-                    (user) =>
-                        JSON.stringify(user.profession) ===
+            ? users.filter(
+                  (user) =>
+                      JSON.stringify(user.profession) ===
                       JSON.stringify(selectedProf)
-                )
-                : users;
+              )
+            : users;
 
         const count = filteredUsers.length;
         const sortedUsers = _.orderBy(
@@ -84,7 +83,7 @@ const UsersListPage = () => {
         };
 
         return (
-            <div className="d-flex">
+            <div className="d-flex container">
                 {professions && (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
                         <GroupList

@@ -12,16 +12,16 @@ const UserPage = ({ userId }) => {
 
     if (user) {
         return (
-            <div>
+            <div className="p-3">
                 <h1> {user.name}</h1>
                 <h2>Профессия: {user.profession.name}</h2>
                 <QualitiesList qualities={user.qualities} />
                 <p>completedMeetings: {user.completedMeetings}</p>
                 <h2>Rate: {user.rate}</h2>
                 <Link
-                    to={`${userId}/edit`}
+                    to={`/users/${userId}/edit`}
                     role="button"
-                    className="btn btn-secondary"
+                    className="btn btn-secondary p-2"
                 >
                     Изменить данные
                 </Link>

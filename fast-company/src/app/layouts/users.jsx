@@ -5,8 +5,7 @@ import UsersListPage from "../components/page/usersListPage";
 import UserEditForm from "../components/ui/userEditForm";
 const Users = () => {
     const params = useParams();
-    const { userId } = params;
-    const { edit } = params;
+    const { userId, edit } = params;
     return (
         <>
             {userId ? (
