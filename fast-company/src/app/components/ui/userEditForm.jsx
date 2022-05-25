@@ -6,6 +6,7 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultySelectField from "../common/form/multySelectField";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 const UserEditForm = ({ userId }) => {
     const [data, setData] = useState();
     useEffect(() => {
@@ -26,6 +27,7 @@ const UserEditForm = ({ userId }) => {
     const [qualities, setQualities] = useState([]);
     const [professions, setProfession] = useState([]);
     const [errors, setErrors] = useState({});
+    const history = useHistory();
     useEffect(() => {
         api.professions.fetchAll().then((data) => {
             const professionsList = Object.keys(data).map((professionName) => ({
@@ -117,7 +119,9 @@ const UserEditForm = ({ userId }) => {
             profession: getProfessionById(profession),
             qualities: getQualities(qualities)
         };
-        api.users.update(userId, newUserData);
+        api.users
+            .update(userId, newUserData)
+            .then((data) => history.push(data._id));
     };
     return data ? (
         <div className="row">
