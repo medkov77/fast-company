@@ -21,6 +21,7 @@ const UserPage = ({ userId }) => {
                         <MeetingsCard value={user.completedMeetings} />
                     </div>
                 </div>
+                <div className="col-md-8"></div>
             </div>
         );
     } else {
