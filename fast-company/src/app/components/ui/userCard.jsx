@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const UserCard = ({ user }) => {
-    const history = useHistory;
+    const history = useHistory();
     const handleClick = () => {
         history.push(history.location.pathname + "/edit");
     };
