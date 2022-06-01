@@ -4,10 +4,10 @@ import { paginate } from "../../../utils/paginate";
 import Pagination from "../../common/pagination";
 import api from "../../../api";
 import GroupList from "../../common/groupList";
-import SearchStatus from "../../ui/searchStatus";
+import SearchStatus from "../../ui/searchSt
+import { useUser } from "../../../utils/hoatus";
 import UserTable from "../../ui/usersTable";
-import _ from "lodash";
-import { useUser } from "../../../utils/hooks/useUsers";
+import _ from "lodash";oks/useUsers";
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
