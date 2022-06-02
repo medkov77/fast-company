@@ -48,11 +48,21 @@ const AddCommentForm = ({ onSubmit }) => {
         onSubmit(data);
         clearForm();
     };
+<<<<<<< HEAD
     const arrayOfUsers =
         users &&
         Object.keys(users).map((userId) => ({
             label: users[userId].name,
             value: users[userId]._id
+=======
+
+    const arrayOfUsers =
+        users &&
+        Object.keys(users).map((userId) => ({
+            name: users[userId].name,
+            value: users[userId]._id,
+            label: users[userId].name
+>>>>>>> 888a35fee2dc7d4e400ec3f4b7eaea41fecea928
         }));
     return (
         <div>
