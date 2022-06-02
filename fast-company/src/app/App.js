@@ -1,11 +1,11 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { ProfessionProvider } from "./utils/hooks/useProfession";
+import { ToastContainer } from "react-toast";
 import Users from "./layouts/users";
 import Login from "./layouts/login";
 import Main from "./layouts/main";
 import NavBar from "./components/ui/navbar";
-import { ToastContainer } from "react-toast";
+import { ProfessionProvider } from "./hooks/useProfession";
 
 function App() {
     return (

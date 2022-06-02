@@ -3,15 +3,7 @@ import PropTypes from "prop-types";
 const MeetingsCard = ({ value }) => {
     return (
         <div className="card mb-3">
-            <div
-                className="
-                                    card-body
-                                    d-flex
-                                    flex-column
-                                    justify-content-center
-                                    text-center
-                                "
-            >
+            <div className="card-body d-flex flex-column justify-content-center text-center">
                 <h5 className="card-title">
                     <span>Completed meetings</span>
                 </h5>
@@ -22,6 +14,7 @@ const MeetingsCard = ({ value }) => {
     );
 };
 MeetingsCard.propTypes = {
-    value: PropTypes.number
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
+
 export default MeetingsCard;

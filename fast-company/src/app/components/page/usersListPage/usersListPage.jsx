@@ -4,20 +4,18 @@ import { paginate } from "../../../utils/paginate";
 import Pagination from "../../common/pagination";
 import api from "../../../api";
 import GroupList from "../../common/groupList";
-import SearchStatus from "../../ui/searchSt
-import { useUser } from "../../../utils/hoatus";
+import SearchStatus from "../../ui/searchStatus";
 import UserTable from "../../ui/usersTable";
-import _ from "lodash";oks/useUsers";
+import _ from "lodash";
+import { useUser } from "../../../hooks/useUsers";
 const UsersListPage = () => {
+    const { users } = useUser();
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 8;
-
-    const { users } = useUser();
-    console.log(users);
 
     const handleDelete = (userId) => {
         // setUsers(users.filter((user) => user._id !== userId));
@@ -57,6 +55,7 @@ const UsersListPage = () => {
     const handleSort = (item) => {
         setSortBy(item);
     };
+
     if (users) {
         const filteredUsers = searchQuery
             ? users.filter(
@@ -85,7 +84,7 @@ const UsersListPage = () => {
         };
 
         return (
-            <div className="d-flex container">
+            <div className="d-flex">
                 {professions && (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
                         <GroupList

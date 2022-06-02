@@ -1,9 +1,8 @@
 import axios from "axios";
-
 import { toast } from "react-toast";
 import config from "../config.json";
 
-axios.defaults.baseURL = config.apiEndPoint;
+axios.defaults.baseURL = config.apiEndpoint;
 
 axios.interceptors.response.use(
     (res) => res,
@@ -12,9 +11,10 @@ axios.interceptors.response.use(
             error.response &&
             error.response.status >= 400 &&
             error.response.status < 500;
+
         if (!expectedErrors) {
             console.log(error);
-            toast.error("Sumthing was wrong. Try it latter");
+            toast.error("Something was wrong. Try it later");
         }
         return Promise.reject(error);
     }
