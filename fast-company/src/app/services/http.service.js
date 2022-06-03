@@ -1,5 +1,5 @@
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "react-toast";
 import config from "../config.json";
 
 axios.defaults.baseURL = config.apiEndpoint;
