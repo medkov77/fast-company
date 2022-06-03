@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
-const LogunForm = () => {
+
+const LoginForm = () => {
     const [data, setData] = useState({
         email: "",
         password: "",
@@ -15,7 +16,6 @@ const LogunForm = () => {
             [target.name]: target.value
         }));
     };
-
     const validatorConfig = {
         email: {
             isRequired: {
@@ -46,7 +46,6 @@ const LogunForm = () => {
     }, [data]);
     const validate = () => {
         const errors = validator(data, validatorConfig);
-
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -92,4 +91,5 @@ const LogunForm = () => {
         </form>
     );
 };
-export default LogunForm;
+
+export default LoginForm;

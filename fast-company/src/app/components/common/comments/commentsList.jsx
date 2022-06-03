@@ -1,13 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Comment from "./comment";
-const CommentList = ({ comments, onRemove }) => {
+import PropTypes from "prop-types";
+
+const CommentsList = ({ comments, onRemove }) => {
     return comments.map((comment) => (
         <Comment key={comment._id} {...comment} onRemove={onRemove} />
     ));
 };
-CommentList.propTypys = {
+CommentsList.propTypes = {
     comment: PropTypes.array,
     onRemove: PropTypes.func
 };
-export default CommentList;
+
+export default CommentsList;

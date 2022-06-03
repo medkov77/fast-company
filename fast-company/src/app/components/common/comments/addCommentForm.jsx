@@ -48,13 +48,11 @@ const AddCommentForm = ({ onSubmit }) => {
         onSubmit(data);
         clearForm();
     };
-
     const arrayOfUsers =
         users &&
         Object.keys(users).map((userId) => ({
-            name: users[userId].name,
-            value: users[userId]._id,
-            label: users[userId].name
+            label: users[userId].name,
+            value: users[userId]._id
         }));
     return (
         <div>

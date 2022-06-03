@@ -1,27 +1,27 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 const SelectField = ({
     label,
-    name,
     value,
     onChange,
     defaultOption,
     options,
-    error
+    error,
+    name
 }) => {
-    useEffect(() => console.log(options), [options]);
     const handleChange = ({ target }) => {
         onChange({ name: target.name, value: target.value });
     };
     const getInputClasses = () => {
         return "form-select" + (error ? " is-invalid" : "");
     };
+
     const optionsArray =
         !Array.isArray(options) && typeof options === "object"
             ? Object.values(options)
             : options;
-    console.log(options);
+
     return (
         <div className="mb-4">
             <label htmlFor={name} className="form-label">
@@ -55,8 +55,8 @@ SelectField.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func,
     error: PropTypes.string,
-    name: PropTypes.string,
-    options: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+    options: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    name: PropTypes.string
 };
 
 export default SelectField;

@@ -6,7 +6,9 @@ export function validator(data, config) {
             case "isRequired": {
                 if (typeof data === "boolean") {
                     statusValidate = !data;
-                } else statusValidate = data.trim() === "";
+                } else {
+                    statusValidate = data.trim() === "";
+                }
                 break;
             }
             case "isEmail": {
