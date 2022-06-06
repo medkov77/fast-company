@@ -6,14 +6,14 @@ import Login from "./layouts/login";
 import Main from "./layouts/main";
 import NavBar from "./components/ui/navbar";
 import { ProfessionProvider } from "./hooks/useProfession";
-import { Qualitiesrovider } from "./hooks/useQualities";
+import { QualitiesProvider } from "./hooks/useQualities";
 
 function App() {
     return (
         <div>
             <NavBar />
             <ProfessionProvider>
-                <Qualitiesrovider>
+                <QualitiesProvider>
                     <Switch>
                         <Route
                             path="/users/:userId?/:edit?"
@@ -23,7 +23,7 @@ function App() {
                         <Route path="/" exact component={Main} />
                         <Redirect to="/" />
                     </Switch>
-                </Qualitiesrovider>
+                </QualitiesProvider>
             </ProfessionProvider>
             <ToastContainer />
         </div>
