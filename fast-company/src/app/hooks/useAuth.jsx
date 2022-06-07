@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import userService from "../services/user.service";
 import { toast } from "react-toast";
+import { setTokens } from "../services/localStorage.service";
 
 const httpAuth = axios.create();
 const AuthContext = React.createContext();
@@ -10,21 +11,13 @@ const AuthContext = React.createContext();
 export const useAuth = () => {
     return useContext(AuthContext);
 };
-const TOKEN_KEY = "jwt-token";
-const REFRESH_KEY = "jwt-refresh-token";
-const EXPIRES_KEY = "jwt-expires";
+
 const AuthProveder = ({ children }) => {
     const [currentUser, setUser] = useState({});
     const [error, setError] = useState(null);
-    function setTokens({ refreshToken, idToken, expiresIn = 3600 }) {
-        const expireDate = new Date().getTime() + expiresIn * 1000;
-        localStorage.setItem(TOKEN_KEY, idToken);
-        localStorage.setItem(REFRESH_KEY, refreshToken);
-        localStorage.setItem(EXPIRES_KEY, expireDate);
-    }
+
     async function singUp({ email, password, ...rest }) {
-        const key = "AIzaSyB7YhJz5Am3FFfWtUSW5PH0lOsgehxh0Es";
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${key}`;
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
             const { data } = await httpAuth.post(url, {
                 email,
@@ -32,9 +25,20 @@ const AuthProveder = ({ children }) => {
                 returnSecureToken: true
             });
             setTokens(data);
+
             await createUser({ _id: data.localId, email, ...rest });
         } catch (error) {
             errorCatcher(error);
+            const { code, message } = error.response.data.error;
+            if (code === 400) {
+                if (message === "EMAIL_EXISTS") {
+                    const errorObject = {
+                        email: "Пользователь с таким e-mail уже существует"
+                    };
+
+                    throw errorObject;
+                }
+            }
         }
     }
     async function createUser(data) {
