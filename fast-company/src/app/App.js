@@ -8,16 +8,17 @@ import NavBar from "./components/ui/navbar";
 import { ProfessionProvider } from "./hooks/useProfession";
 import { QualitiesProvider } from "./hooks/useQualities";
 import AuthProveder from "./hooks/useAuth";
+import ProtectedRoute from "./components/common/protectedRoute";
 
 function App() {
     return (
-        <div>
+        <div className="container">
             <AuthProveder>
                 <NavBar />
                 <ProfessionProvider>
                     <QualitiesProvider>
                         <Switch>
-                            <Route
+                            <ProtectedRoute
                                 path="/users/:userId?/:edit?"
                                 component={Users}
                             />

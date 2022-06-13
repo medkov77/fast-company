@@ -2,10 +2,17 @@ import React, { useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import userService from "../services/user.service";
+import localStorageService, {
+    setTokens
+} from "../services/localStorage.service";
 import { toast } from "react-toast";
-import { setTokens } from "../services/localStorage.service";
 
-const httpAuth = axios.create();
+export const httpAuth = axios.create({
+    baseURL: "https://securetoken.googleapis.com/v1/",
+    params: {
+        key: process.env.REACT_APP_FIREBASE_KEY
+    }
+});
 const AuthContext = React.createContext();
 
 export const useAuth = () => {
@@ -13,9 +20,12 @@ export const useAuth = () => {
 };
 
 const AuthProveder = ({ children }) => {
-    const [currentUser, setUser] = useState({});
+    const [currentUser, setUser] = useState();
     const [error, setError] = useState(null);
-
+    const [isLoading, setLosding] = useState(true);
+    function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
     async function singUp({ email, password, ...rest }) {
         const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`;
         try {
@@ -26,7 +36,13 @@ const AuthProveder = ({ children }) => {
             });
             setTokens(data);
 
-            await createUser({ _id: data.localId, email, ...rest });
+            await createUser({
+                _id: data.localId,
+                email,
+                rate: randomInt(1, 5),
+                complitetMeetings: randomInt(0, 200),
+                ...rest
+            });
         } catch (error) {
             errorCatcher(error);
             const { code, message } = error.response.data.error;
@@ -50,7 +66,7 @@ const AuthProveder = ({ children }) => {
                 returnSecureToken: true
             });
             setTokens(data);
-            console.log(data);
+            getUserData();
         } catch (error) {
             const { code, message } = error.response.data.error;
             if (code === 400) {
@@ -82,6 +98,23 @@ const AuthProveder = ({ children }) => {
         const { message } = error;
         setError(message);
     }
+    async function getUserData() {
+        try {
+            const { content } = await userService.getCurrentUser();
+            console.log(content);
+            setUser(content);
+        } catch (error) {
+            console.log(error);
+            errorCatcher(error);
+        } finally {
+            setLosding(false);
+        }
+    }
+    useEffect(() => {
+        if (localStorageService.getAccessToken()) {
+            getUserData();
+        } else setLosding(false);
+    }, []);
     useEffect(() => {
         if (error !== null) {
             toast(error);
@@ -90,7 +123,7 @@ const AuthProveder = ({ children }) => {
     }, [error]);
     return (
         <AuthContext.Provider value={{ singUp, singIn, currentUser }}>
-            {children}
+            {!isLoading ? children : "Loading..."}
         </AuthContext.Provider>
     );
 };
