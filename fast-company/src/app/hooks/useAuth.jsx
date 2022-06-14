@@ -6,6 +6,7 @@ import localStorageService, {
     setTokens
 } from "../services/localStorage.service";
 import { toast } from "react-toast";
+import { useHistory } from "react-router-dom";
 
 export const httpAuth = axios.create({
     baseURL: "https://securetoken.googleapis.com/v1/",
@@ -23,6 +24,12 @@ const AuthProveder = ({ children }) => {
     const [currentUser, setUser] = useState();
     const [error, setError] = useState(null);
     const [isLoading, setLosding] = useState(true);
+    const history = useHistory();
+    function logOut() {
+        localStorageService.removeAuthData();
+        setUser(null);
+        history.push("/");
+    }
     function randomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
@@ -41,6 +48,11 @@ const AuthProveder = ({ children }) => {
                 email,
                 rate: randomInt(1, 5),
                 complitetMeetings: randomInt(0, 200),
+                image: `https://avatars.dicebear.com/api/avataaars/${(
+                    Math.random() + 1
+                )
+                    .toString(36)
+                    .substring(7)}.svg`,
                 ...rest
             });
         } catch (error) {
@@ -66,7 +78,7 @@ const AuthProveder = ({ children }) => {
                 returnSecureToken: true
             });
             setTokens(data);
-            getUserData();
+            await getUserData();
         } catch (error) {
             const { code, message } = error.response.data.error;
             if (code === 400) {
@@ -122,7 +134,7 @@ const AuthProveder = ({ children }) => {
         }
     }, [error]);
     return (
-        <AuthContext.Provider value={{ singUp, singIn, currentUser }}>
+        <AuthContext.Provider value={{ singUp, singIn, currentUser, logOut }}>
             {!isLoading ? children : "Loading..."}
         </AuthContext.Provider>
     );
