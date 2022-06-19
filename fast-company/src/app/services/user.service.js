@@ -20,6 +20,13 @@ const userService = {
             userEndpoint + localStorageService.getUserId()
         );
         return data;
+    },
+    update: async (newData) => {
+        const { data } = await httpService.patch(
+            userEndpoint + newData._id,
+            newData
+        );
+        return data;
     }
 };
 export default userService;

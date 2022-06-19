@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ProfessionService from "../services/profession.service";
-import { toast } from "react-toast";
+import { toast } from "react-toastify";
 
 const ProfessionContext = React.createContext();
 
@@ -24,7 +24,7 @@ export const ProfessionProvider = ({ children }) => {
         getProfessionsList();
     }, []);
     function errorCatcher(error) {
-        const { message } = error;
+        const { message } = error.response.data;
         setError(message);
     }
     function getProfession(id) {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { toast } from "react-toast";
+import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import qualityService from "../services/quality.service";
 
@@ -31,7 +31,7 @@ export const QualitiesProvider = ({ children }) => {
     };
 
     function errorCatcher(error) {
-        const { message } = error;
+        const { message } = error.response.data;
         setError(message);
     }
     useEffect(() => {

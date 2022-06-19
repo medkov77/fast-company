@@ -9,27 +9,28 @@ import { useQualities } from "../../hooks/useQualities";
 import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
+
 const RegisterForm = () => {
     const history = useHistory();
     const [data, setData] = useState({
-        name: "",
         email: "",
         password: "",
         profession: "",
         sex: "male",
+        name: "",
         qualities: [],
         licence: false
     });
-    const { singUp } = useAuth();
+    const { signUp } = useAuth();
     const { qualities } = useQualities();
-    let { professions } = useProfessions();
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
     }));
-    professions = professions.map((prof) => ({
-        label: prof.name,
-        value: prof._id
+    const { professions } = useProfessions();
+    const professionsList = professions.map((p) => ({
+        label: p.name,
+        value: p._id
     }));
     const [errors, setErrors] = useState({});
 
@@ -102,9 +103,9 @@ const RegisterForm = () => {
             ...data,
             qualities: data.qualities.map((q) => q.value)
         };
-        console.log(newData);
+
         try {
-            await singUp(newData);
+            await signUp(newData);
             history.push("/");
         } catch (error) {
             setErrors(error);
@@ -138,7 +139,7 @@ const RegisterForm = () => {
             <SelectField
                 label="Выбери свою профессию"
                 defaultOption="Choose..."
-                options={professions}
+                options={professionsList}
                 name="profession"
                 onChange={handleChange}
                 value={data.profession}
@@ -158,6 +159,7 @@ const RegisterForm = () => {
             <MultiSelectField
                 options={qualitiesList}
                 onChange={handleChange}
+                defaultValue={data.qualities}
                 name="qualities"
                 label="Выберите ваши качества"
             />
