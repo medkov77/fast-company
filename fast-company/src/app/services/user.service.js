@@ -21,10 +21,10 @@ const userService = {
         );
         return data;
     },
-    update: async (newData) => {
+    update: async (payload) => {
         const { data } = await httpService.patch(
-            userEndpoint + newData._id,
-            newData
+            userEndpoint + localStorageService.getUserId(),
+            payload
         );
         return data;
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { validator } from "../../../utils/validator";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
@@ -7,72 +7,79 @@ import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
 import { useAuth } from "../../../hooks/useAuth";
-import { useProfessions } from "../../../hooks/useProfession";
-import { useQualities } from "../../../hooks/useQualities";
-import { useHistory } from "react-router-dom";
+
+import { useSelector } from "react-redux";
+import {
+    getQualities,
+    getQualitiesLoadingStatus
+} from "../../../store/qualities";
+import {
+    getprofessions,
+    getprofessionsLoadingStatus
+} from "../../../store/professions";
 
 const EditUserPage = () => {
-    const { currentUser, updateUserData } = useAuth();
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState({
-        _id: null,
-        name: "",
-        email: "",
-        profession: "",
-        sex: "male",
-        qualities: []
-    });
-    const transformData = (data) => {
-        return data.map((qual) => ({ label: qual.name, value: qual._id }));
-    };
-    const { professions: profList, isLoading: profIsLoading } =
-        useProfessions();
-    const { qualities: allQualities, isLoading: qualIsLoading } =
-        useQualities();
-
-    const getQuality = (id) => {
-        return qualities.find((q) => q.value === id);
-    };
-
-    const qualities = transformData(allQualities);
-    const professions = transformData(profList);
-
+    const [data, setData] = useState();
+    const { currentUser, updateUserData } = useAuth();
+    const qualities = useSelector(getQualities());
+    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
+    const qualitiesList = qualities.map((q) => ({
+        label: q.name,
+        value: q._id
+    }));
+    const professions = useSelector(getprofessions());
+    const professionLoading = useSelector(getprofessionsLoadingStatus());
+    const professionsList = professions.map((p) => ({
+        label: p.name,
+        value: p._id
+    }));
     const [errors, setErrors] = useState({});
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-
-        updateUserData({
-            ...currentUser,
-            _id: data._id,
-            name: data.name,
-            email: data.email,
-            profession: data.profession,
-            sex: data.sex,
+        await updateUserData({
+            ...data,
             qualities: data.qualities.map((q) => q.value)
         });
-        history.push(`/users/${data._id}`);
-    };
 
-    useEffect(() => {
-        if (currentUser && !profIsLoading && !qualIsLoading) {
-            setIsLoading(false);
-            setData((prevState) => ({
-                ...prevState,
-                _id: currentUser._id,
-                name: currentUser.name,
-                email: currentUser.email,
-                profession: currentUser.profession,
-                sex: currentUser.sex,
-                qualities: currentUser.qualities.map((q) => {
-                    return getQuality(q);
-                })
-            }));
+        history.push(`/users/${currentUser._id}`);
+    };
+    function getQualitiesListByIds(qualitiesIds) {
+        const qualitiesArray = [];
+        for (const qualId of qualitiesIds) {
+            for (const quality of qualities) {
+                if (quality._id === qualId) {
+                    qualitiesArray.push(quality);
+                    break;
+                }
+            }
         }
-    }, [currentUser, qualIsLoading, profIsLoading]);
+        return qualitiesArray;
+    }
+    const transformData = (data) => {
+        const result = getQualitiesListByIds(data).map((qual) => ({
+            label: qual.name,
+            value: qual._id
+        }));
+        return result;
+    };
+    useEffect(() => {
+        if (!professionLoading && !qualitiesLoading && currentUser && !data) {
+            setData({
+                ...currentUser,
+                qualities: transformData(currentUser.qualities)
+            });
+        }
+    }, [professionLoading, qualitiesLoading, currentUser, data]);
+    useEffect(() => {
+        if (data && isLoading) {
+            setIsLoading(false);
+        }
+    }, [data]);
 
     const validatorConfig = {
         email: {
@@ -109,7 +116,7 @@ const EditUserPage = () => {
             <BackHistoryButton />
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    {!isLoading ? (
+                    {!isLoading && Object.keys(professions).length > 0 ? (
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 label="Имя"
@@ -128,7 +135,7 @@ const EditUserPage = () => {
                             <SelectField
                                 label="Выбери свою профессию"
                                 defaultOption="Choose..."
-                                options={professions}
+                                options={professionsList}
                                 name="profession"
                                 onChange={handleChange}
                                 value={data.profession}
@@ -147,7 +154,7 @@ const EditUserPage = () => {
                             />
                             <MultiSelectField
                                 defaultValue={data.qualities}
-                                options={qualities}
+                                options={qualitiesList}
                                 onChange={handleChange}
                                 name="qualities"
                                 label="Выберите ваши качества"
