@@ -6,31 +6,31 @@ import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
-import { useAuth } from "../../../hooks/useAuth";
-
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
     getQualities,
     getQualitiesLoadingStatus
 } from "../../../store/qualities";
 import {
-    getprofessions,
-    getprofessionsLoadingStatus
+    getProfessions,
+    getProfessionsLoadingStatus
 } from "../../../store/professions";
-
+import { getCurrentUserData, updateUserData } from "../../../store/users";
 const EditUserPage = () => {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState();
-    const { currentUser, updateUserData } = useAuth();
+    const currentUser = useSelector(getCurrentUserData());
+    const dispatch = useDispatch();
+
     const qualities = useSelector(getQualities());
     const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
     }));
-    const professions = useSelector(getprofessions());
-    const professionLoading = useSelector(getprofessionsLoadingStatus());
+    const professions = useSelector(getProfessions());
+    const professionLoading = useSelector(getProfessionsLoadingStatus());
     const professionsList = professions.map((p) => ({
         label: p.name,
         value: p._id
@@ -41,10 +41,12 @@ const EditUserPage = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        await updateUserData({
-            ...data,
-            qualities: data.qualities.map((q) => q.value)
-        });
+        dispatch(
+            updateUserData({
+                ...data,
+                qualities: data.qualities.map((q) => q.value)
+            })
+        );
 
         history.push(`/users/${currentUser._id}`);
     };
